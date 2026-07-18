@@ -84,18 +84,14 @@ public class Product {
         this.imgUrl = imgUrl;
     }
 
-    public Set<Category> getCategoriess() {
-        return this.categories;
-    }
-
     public Set<Category> getCategories() {
-        return categories;
+        return this.categories;
     }
 
     public Set<OrderItem> getItems() {
         return items;
     }
-    
+
     public List<Order> getOrders(){
         return  items.stream().map(x -> x.getOrder()).toList();
     }
