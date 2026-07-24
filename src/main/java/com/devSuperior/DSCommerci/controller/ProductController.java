@@ -49,4 +49,11 @@ public class ProductController {
         return ResponseEntity.ok(dto);
     }
 
+    //Deletando registro PUT
+    @DeleteMapping(value ="/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

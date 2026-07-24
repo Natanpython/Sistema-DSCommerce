@@ -17,6 +17,15 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
+    //metodo criado para a Entitys
+    private void copyDtoToEntity(ProductDTO dto, Product entity) {
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setPrice(dto.getPrice());
+        entity.setImgUrl(dto.getImgUrl());
+
+    }
+
     //Get puxar por ID
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
@@ -31,7 +40,7 @@ public class ProductService {
         return result.map(x -> new ProductDTO(x));
     }
 
-    //Criar novo registro com POST
+    //POST Criar novo registro
     @Transactional
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
@@ -40,7 +49,13 @@ public class ProductService {
         return new ProductDTO(entity);
     }
 
-    //CAtualizando registro com PUT
+    //DELETE registro
+    @Transactional
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    //PUT Atualizando registro
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         Product entity = repository.getReferenceById(id);
@@ -48,13 +63,6 @@ public class ProductService {
         entity = repository.save(entity);
         return new ProductDTO(entity);
     }
-    //metodo criado para a Entitys
-    private void copyDtoToEntity(ProductDTO dto, Product entity) {
-        entity.setName(dto.getName());
-        entity.setDescription(dto.getDescription());
-        entity.setPrice(dto.getPrice());
-        entity.setImgUrl(dto.getImgUrl());
 
-    }
 
 }
