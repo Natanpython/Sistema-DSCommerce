@@ -3,14 +3,16 @@ package com.devSuperior.DSCommerci.services;
 import com.devSuperior.DSCommerci.dto.ProductDTO;
 import com.devSuperior.DSCommerci.entities.Product;
 import com.devSuperior.DSCommerci.repositories.ProductRepository;
+import com.devSuperior.DSCommerci.services.exceptions.DatabaseException;
 import com.devSuperior.DSCommerci.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class ProductService {
@@ -31,7 +33,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
         Product product = repository.findById(id).orElseThrow(
-                ()-> new ResourceNotFoundException("Recurso não encontrado")
+                () -> new ResourceNotFoundException("Recurso não encontrado")
         );
         return new ProductDTO(product);
     }
@@ -53,18 +55,32 @@ public class ProductService {
     }
 
     //DELETE registro
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
-        repository.deleteById(id);
+        if(!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }try{
+            repository.deleteById(id);
+        }catch (DataIntegrityViolationException e){
+            throw new DatabaseException("Falha de integridade referencial");
+        }
+
     }
 
     //PUT Atualizando registro
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
-        Product entity = repository.getReferenceById(id);
-        copyDtoToEntity(dto, entity);
-        entity = repository.save(entity);
-        return new ProductDTO(entity);
+        try {
+            Product entity = repository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            entity = repository.save(entity);
+            return new ProductDTO(entity);
+
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
+
     }
 
 
