@@ -3,6 +3,7 @@ package com.devSuperior.DSCommerci.services;
 import com.devSuperior.DSCommerci.dto.ProductDTO;
 import com.devSuperior.DSCommerci.entities.Product;
 import com.devSuperior.DSCommerci.repositories.ProductRepository;
+import com.devSuperior.DSCommerci.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +30,9 @@ public class ProductService {
     //Get puxar por ID
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        Product product = repository.findById(id).get();
+        Product product = repository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Recurso não encontrado")
+        );
         return new ProductDTO(product);
     }
 
