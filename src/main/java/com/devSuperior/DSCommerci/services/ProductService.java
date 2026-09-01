@@ -1,6 +1,9 @@
 package com.devSuperior.DSCommerci.services;
 
+import com.devSuperior.DSCommerci.dto.CategoryDTO;
 import com.devSuperior.DSCommerci.dto.ProductDTO;
+import com.devSuperior.DSCommerci.dto.ProductMinDTO;
+import com.devSuperior.DSCommerci.entities.Category;
 import com.devSuperior.DSCommerci.entities.Product;
 import com.devSuperior.DSCommerci.repositories.ProductRepository;
 import com.devSuperior.DSCommerci.services.exceptions.DatabaseException;
@@ -27,6 +30,13 @@ public class ProductService {
         entity.setPrice(dto.getPrice());
         entity.setImgUrl(dto.getImgUrl());
 
+        entity.getCategories().clear();
+        for(CategoryDTO catDto: dto.getCategories()){
+            Category cat = new Category();
+            cat.setId(catDto.getId());
+            entity.getCategories().add(cat);
+        }
+
     }
 
     //Get puxar por ID
@@ -40,9 +50,9 @@ public class ProductService {
 
     //Get para todos com o Pageable ele pagina listagens otimo para muitas datos em get all
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAll(String name, Pageable pageable) {
+    public Page<ProductMinDTO> findAll(String name, Pageable pageable) {
         Page<Product> result = repository.searchByName(name, pageable);
-        return result.map(x -> new ProductDTO(x));
+        return result.map(x -> new ProductMinDTO(x));
     }
 
     //POST Criar novo registro
