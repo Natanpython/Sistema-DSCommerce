@@ -18,7 +18,7 @@ public class UserController {
     private UserService service;
 
 //Buscar pelo ID
-@PreAuthorize("hasAnyRole('ROLE_ADMIN',' ROLE_CLIENT')")
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
     @GetMapping(value ="/me")
     public ResponseEntity<UserDTO> getMe(){
         UserDTO dto = service.getMe();

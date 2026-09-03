@@ -3,6 +3,8 @@ package com.devSuperior.DSCommerci.dto;
 import com.devSuperior.DSCommerci.entities.Order;
 import com.devSuperior.DSCommerci.entities.OrderItem;
 import com.devSuperior.DSCommerci.entities.OrderStatus;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +17,9 @@ public class OrderDTO {
     private OrderStatus status;
     private ClientDTO client;
     private PaymentDTO payment;
+
+    @NotEmpty(message = "Deve ter pelo menos uma item.")
+    @Valid
     private List<OrderItemDTO> items = new ArrayList<>();
 
     public OrderDTO() {
