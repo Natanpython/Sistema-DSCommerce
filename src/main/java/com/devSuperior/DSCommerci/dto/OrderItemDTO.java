@@ -6,23 +6,21 @@ import jakarta.validation.constraints.Positive;
 
 public class OrderItemDTO {
 
-    @NotNull(message = "O id do produto é obrigatório.")
     private Long productId;
     private String name;
     private Double price;
-
-    @NotNull(message = "A quantidade é obrigatória.")
-    @Positive(message = "A quantidade deve ser maior que zero.")
     private Integer quantity;
+    private String imageUrl;
 
     public OrderItemDTO() {
     }
 
-    public OrderItemDTO(Long productId, String name, Double price, Integer quantity) {
+    public OrderItemDTO(Long productId, String name, Double price, Integer quantity, String imageUrl) {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+        this.imageUrl = imageUrl;
     }
 
     public OrderItemDTO(OrderItem entity) {
@@ -30,6 +28,7 @@ public class OrderItemDTO {
         name = entity.getProduct().getName();
         price = entity.getPrice();
         quantity = entity.getQuantity();
+        imageUrl = entity.getProduct().getImageUrl();
     }
 
     public Long getProductId() {
@@ -50,5 +49,9 @@ public class OrderItemDTO {
 
     public Double getSubTotal() {
         return price * quantity;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

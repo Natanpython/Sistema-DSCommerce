@@ -93,6 +93,17 @@ public class User implements UserDetails {
     }
 
 
+    //validação se o usuario é ADM
+    public boolean hasRole(String roleName) {
+        for (Role role : roles) {
+            if (role.getAuthority().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     //Importante
     public Set<Role> getRoles() {
         return roles;
@@ -101,15 +112,6 @@ public class User implements UserDetails {
     //Importante
     public void addRole(Role role){
         roles.add(role);
-    }
-
-    public boolean hasRole(String roleName){
-        for(Role role : roles){
-            if(role.getAuthority().equals(roleName)){
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

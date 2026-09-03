@@ -31,12 +31,18 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private AuthService authService;
+
     //Get puxar por ID
     @Transactional(readOnly = true)
     public OrderDTO findById(Long id) {
         Order order = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Recurso não encontrado")
         );
+
+        authService.validateSelfOrAdmin(order.getClient().getId());
+
         return new OrderDTO(order);
     }
 

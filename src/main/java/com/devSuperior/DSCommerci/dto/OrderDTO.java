@@ -19,7 +19,6 @@ public class OrderDTO {
     private PaymentDTO payment;
 
     @NotEmpty(message = "Deve ter pelo menos uma item.")
-    @Valid
     private List<OrderItemDTO> items = new ArrayList<>();
 
     public OrderDTO() {
