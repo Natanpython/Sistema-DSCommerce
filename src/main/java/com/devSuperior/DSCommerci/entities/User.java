@@ -100,7 +100,7 @@ public class User implements UserDetails {
 
 
     //implementation of the many-to-many relationship between User and Role
-    public Set<Role> getRoles(Role role) {
+    public Set<Role> getRoles() {
         return roles;
     }
 

@@ -1,13 +1,18 @@
 package com.devSuperior.DSCommerci.services;
 
+import com.devSuperior.DSCommerci.dto.UserDTO;
 import com.devSuperior.DSCommerci.entities.Role;
 import com.devSuperior.DSCommerci.entities.User;
 import com.devSuperior.DSCommerci.projections.UserDetailsProjection;
 import com.devSuperior.DSCommerci.repositories.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,17 +25,39 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         List<UserDetailsProjection> result = repository.searchUserAndRolesByEmail(username);
         if (result.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
+
         User user = new User();
         user.setEmail(username);
         user.setPassword(result.get(0).getPassword());
-        for(UserDetailsProjection projection : result) {
-            user.getRoles(new Role(projection.getRoleId(), projection.getAuthority()));
+        for (UserDetailsProjection projection : result) {
+            user.addRole(new Role(projection.getRoleId(), projection.getAuthority()));
         }
+
         return user;
+    }
+
+    protected User autenticated() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();
+            String username = jwtPrincipal.getClaim("username");
+
+            return repository.findByEmail(username).get();
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+    }
+
+    @Transactional(readOnly = true)
+    public UserDTO getMe() {
+        User user = autenticated();
+        return new UserDTO(user);
     }
 
 }

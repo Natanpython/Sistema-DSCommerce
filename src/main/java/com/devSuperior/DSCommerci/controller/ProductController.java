@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,25 +21,27 @@ public class ProductController {
     @Autowired
     private ProductService service;
 
-//Buscar pelo ID
-    @GetMapping(value ="/{id}")
-    public ResponseEntity<ProductDTO> findById(@PathVariable Long id){
-       ProductDTO dto = service.findById(id);
+
+    //Buscar pelo ID
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
+        ProductDTO dto = service.findById(id);
         return ResponseEntity.ok(dto);
     }
 
-//Buscar a lista completa
+    //Buscar a lista completa
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>>  findAll(
+    public ResponseEntity<Page<ProductDTO>> findAll(
             @RequestParam(name = "name", defaultValue = "") String name,
-            Pageable pageable){
+            Pageable pageable) {
         Page<ProductDTO> dto = service.findAll(name, pageable);
         return ResponseEntity.ok(dto);
     }
 
-//Criando novo registro com Post
+    //Criando novo registro com Post
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dto){
+    public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dto) {
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -46,15 +49,17 @@ public class ProductController {
     }
 
     //Atualizando registro PUT
-    @PutMapping(value ="/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO dto){
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO dto) {
         dto = service.update(id, dto);
         return ResponseEntity.ok(dto);
     }
 
-    //Deletando registro 
-    @DeleteMapping(value ="/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    //Deletando registro
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
