@@ -1,4 +1,6 @@
-package com.devSuperior.DSCommerci.entities;
+package com.devSuperior.DSCommerci.dto;
+
+import com.devSuperior.DSCommerci.entities.Product;
 
 public class ProductMinDTO {
 

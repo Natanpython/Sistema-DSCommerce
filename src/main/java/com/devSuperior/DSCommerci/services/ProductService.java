@@ -4,7 +4,7 @@ import com.devSuperior.DSCommerci.dto.CategoryDTO;
 import com.devSuperior.DSCommerci.dto.ProductDTO;
 import com.devSuperior.DSCommerci.entities.Category;
 import com.devSuperior.DSCommerci.entities.Product;
-import com.devSuperior.DSCommerci.entities.ProductMinDTO;
+import com.devSuperior.DSCommerci.dto.ProductMinDTO;
 import com.devSuperior.DSCommerci.repositories.ProductRepository;
 import com.devSuperior.DSCommerci.services.exceptions.DatabaseException;
 import com.devSuperior.DSCommerci.services.exceptions.ResourceNotFoundException;

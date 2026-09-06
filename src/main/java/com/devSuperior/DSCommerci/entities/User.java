@@ -108,6 +108,7 @@ public class User implements UserDetails {
         roles.add(role);
     }
 
+    //validação se o usuario é ADM
     public boolean hasRole(String roleName) {
         for (Role role : roles) {
             if (role.getAuthority().equals(roleName)) {

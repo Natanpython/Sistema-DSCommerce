@@ -1,7 +1,7 @@
 package com.devSuperior.DSCommerci.controller;
 
 import com.devSuperior.DSCommerci.dto.ProductDTO;
-import com.devSuperior.DSCommerci.entities.ProductMinDTO;
+import com.devSuperior.DSCommerci.dto.ProductMinDTO;
 import com.devSuperior.DSCommerci.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

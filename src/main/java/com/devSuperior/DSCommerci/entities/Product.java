@@ -109,4 +109,8 @@ public class Product {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    public String getImageUrl() {
+        return imgUrl;
+    }
 }
